@@ -231,3 +231,30 @@ main {
     -webkit-line-clamp: 6;
     -webkit-box-orient: vertical;
 }
+
+@media screen and (max-width:991px) {
+
+    .filters {
+        flex-wrap: wrap;
+    }
+
+    .filter {
+        flex-basis: 100%;
+        margin-bottom: 10px;
+    }
+
+    .filter_dropdown li {
+        flex-basis: 50%;
+    }
+
+    .recipe {
+        flex-basis : 49%;
+    }
+}
+
+@media screen and (max-width:767px) {
+
+    .recipe {
+        flex-basis : 100%;
+    }
+}
