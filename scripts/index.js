@@ -17,7 +17,9 @@ async function getFilters(data){
         // TODO remove plurial from ingredients const
 
         recipe.ingredients.forEach((ingredient)=>{
-            if(!Ingredients.includes(ingredient.ingredient.toLowerCase()) && !Ingredients.includes(ingredient.ingredient.toLowerCase().substring(0, ingredient.ingredient.length - 1))){
+            if(!Ingredients.includes(ingredient.ingredient.toLowerCase()) 
+            && !Ingredients.includes(ingredient.ingredient.toLowerCase().substring(0, ingredient.ingredient.length - 1))
+            && !Ingredients.includes(ingredient.ingredient.toLowerCase()+"s")){
                 Ingredients.push(ingredient.ingredient.toLowerCase());
             }
         })
@@ -37,6 +39,38 @@ async function getFilters(data){
     console.log("Tools",Tools)
 }
 
+// display de data of each filter
+async function displayFilterLists(){
+    const ingredientFilters = document.querySelector(".filter_ingredient").querySelector(".filter_dropdown");
+    const applianceFilters = document.querySelector(".filter_appliance").querySelector(".filter_dropdown");
+    const toolFilters = document.querySelector(".filter_tool").querySelector(".filter_dropdown");
+
+    const filters = [["ingredient", Ingredients], ["appliance", Appliances], ["tool", Tools]];
+    filters["ingredient"] = Ingredients;
+    filters["appliance"] = Appliances;
+    filters["tool"] = Tools;
+    console.log(filters);
+    filters.forEach((filter)=> {
+
+        const filterDropdown = document.querySelector(".filter_"+filter[0]).querySelector(".filter_dropdown");
+        const ul = document.createElement("ul");
+        filterDropdown.appendChild(ul);
+
+        filter[1].forEach((item)=>{
+            const li = document.createElement("li");
+            li.innerHTML = item;
+            ul.appendChild(li);
+        })
+console.log(filterDropdown)
+    })
+    // for(let i = 0 ; i <= 3 ; i++){
+
+    // }
+
+    // console.log(ingredientFilter)
+
+}
+
 // display de data of each recipes
 async function displayRecipes(recipes) {
     const recipesSection = document.querySelector(".recipes");
@@ -52,6 +86,8 @@ async function displayRecipes(recipes) {
 async function init() {
     const { recipes } = await getRecipes();
     getFilters(recipes);
+
+    displayFilterLists();
     displayRecipes(recipes);
 }
 
