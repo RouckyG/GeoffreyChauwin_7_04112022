@@ -1,31 +1,56 @@
-const Ingredients = [];
-const Appliances = [];
-const Tools = [];
+const allIngredients = [];
+const allAppliances = [];
+const allTools = [];
+
+const Filters = {
+    ingredient : allIngredients,
+    appliance : allAppliances,
+    tool : allTools
+}
 
 const activatedFilters = [];
 
 const searchInput = document.querySelector(".search_input input");
 
 // add a filter when user enter a word in the search bar
-async function addSearchFilters(){
-    if(searchInput.value.length >= 2){
-        addActivatedFilters(searchInput.value, "search");
-        searchInput.value = "";
+function addSearchFilters(element, itemType){
+    if(element.value.length >= 2){
+        addActivatedFilters(element.value, itemType);
+        element.value = "";
     }
 }
 
-searchInput.addEventListener("keyup", (e)=> e.key == "Enter" ? addSearchFilters() : "")
+searchInput.addEventListener("keyup", (e)=> { if(e.key == "Enter"){addSearchFilters(searchInput, "search")} });
 
 const searchIcon = document.querySelector(".search_input i");
-searchIcon.addEventListener("click", () => addSearchFilters());
+searchIcon.addEventListener("click", () => addSearchFilters(searchInput, "search"));
 
 const filters = document.querySelectorAll(".filter");
 
 // hide all filters dropdown
-async function hideFiltersDropdown(){
+function hideFiltersDropdown(){
     filters.forEach((filter) => {
         filter.querySelector("ul").style.display = "none";
     })
+}
+
+// search a filter in a filter's dropdown
+function searchFilterItem(element, itemType){
+    if(element.value.length >= 2){
+        // addActivatedFilters(element.value, "search");
+        // element.value = "";
+        const oldItems = Filters[itemType];
+        const newItems = [];
+
+        oldItems.forEach((item) => {
+            if(item.includes(element.value)){
+                newItems.push(item);
+            }
+        })
+
+        Filters[itemType] = newItems;
+        displayFilterlist(itemType, newItems)
+    }
 }
 
 // add the event listener on all arrows for show the dropdown list and hide the others
@@ -42,6 +67,21 @@ filters.forEach((filter) => {
             dropdown.style.display = "none";
         }
     })
+
+    const filterInput = filter.querySelector(".filter_input input");
+    const itemType = filter.classList[1].split("_")[1];
+    filterInput.addEventListener("keyup", (e)=> {
+
+        if(e.key == "Enter"){
+            addSearchFilters(filterInput, itemType);
+        }
+        else if(filterInput.value.length >= 2){
+            searchFilterItem(filterInput, itemType);
+        }
+        else {
+            displayFilterlist(itemType, Filters[itemType]);
+        }
+    });
 })
 
 // get the recipe from the json file
@@ -53,7 +93,7 @@ async function getRecipes() {
 }
 
 // update the activated Filters list by adding the one the user clicked on
-async function addActivatedFilters(item, itemType){
+function addActivatedFilters(item, itemType){
     const filter = {"item" : item, "itemType" : itemType}
 
     activatedFilters.push(filter);
@@ -62,14 +102,14 @@ async function addActivatedFilters(item, itemType){
 }
 
 // update the activated Filters list by removing the one the user clicked on
-async function removeActivatedFilters(item, itemType){
+function removeActivatedFilters(item, itemType){
     activatedFilters.splice(activatedFilters.findIndex((filter) => filter.item === item),1);
 
     displayActivatedFilters()
 }
 
 // display the activated Filters tags
-async function displayActivatedFilters(){
+function displayActivatedFilters(){
     const activatedFiltersList = document.querySelector(".tags")
     activatedFiltersList.innerHTML = "";
 
@@ -92,45 +132,47 @@ async function displayActivatedFilters(){
         const i = document.createElement("i");
         i.classList.add("fa-regular", "fa-circle-xmark")
         a.appendChild(i);
-
-        // <span class="tag tag_search">
-        //             <p>Coco</p>
-        //             <a href="#"><i class="fa-regular fa-circle-xmark"></i></a>   
-        //         </span>
     })
 }
 
 // ingredients, appliance, ustensils
-async function getFilters(data){
+function getFilters(data){
 
     data.forEach((recipe) =>{
 
-        // TODO remove plurial from ingredients const
-
         recipe.ingredients.forEach((ingredient)=>{
-            if(!Ingredients.includes(ingredient.ingredient.toLowerCase()) 
-            && !Ingredients.includes(ingredient.ingredient.toLowerCase().substring(0, ingredient.ingredient.length - 1))
-            && !Ingredients.includes(ingredient.ingredient.toLowerCase()+"s")){
-                Ingredients.push(ingredient.ingredient.toLowerCase());
+            if(!allIngredients.includes(ingredient.ingredient.toLowerCase()) 
+            && !allIngredients.includes(ingredient.ingredient.toLowerCase().substring(0, ingredient.ingredient.length - 1))
+            && !allIngredients.includes(ingredient.ingredient.toLowerCase()+"s")){
+                allIngredients.push(ingredient.ingredient.toLowerCase());
             }
         })
 
-        if(!Appliances.includes(recipe.appliance.toLowerCase())){
-            Appliances.push(recipe.appliance.toLowerCase());
+        if(!allAppliances.includes(recipe.appliance.toLowerCase())){
+            allAppliances.push(recipe.appliance.toLowerCase());
         }
 
         recipe.ustensils.forEach((tool)=>{
-            if(!Tools.includes(tool.toLowerCase())){
-                Tools.push(tool.toLowerCase());
+            if(!allTools.includes(tool.toLowerCase())){
+                allTools.push(tool.toLowerCase());
             }
         })
     });
 }
 
 // display data of each filter
-async function displayFilterLists(){
+function displayFilterLists(){
 
-    const filters = [["ingredient", Ingredients], ["appliance", Appliances], ["tool", Tools]];
+    const filters = [["ingredient", allIngredients], ["appliance", allAppliances], ["tool", allTools]];
+
+    filters.forEach((filter)=> {
+        displayFilterlist(filter[0], filter[1])
+    })
+}
+
+function updateFilterLists(){
+
+    const filters = [["ingredient", Filters.ingredient], ["appliance", Filters.appliances], ["tool", Filters.tools]];
 
     filters.forEach((filter)=> {
         displayFilterlist(filter[0], filter[1])
@@ -138,9 +180,9 @@ async function displayFilterLists(){
 }
 
 // display data of a filter
-async function displayFilterlist(itemsType, items){
+function displayFilterlist(itemsType, items){
     const filterDropdown = document.querySelector(".filter_"+itemsType+" .filter_dropdown ul");
-
+    filterDropdown.innerHTML = "";
     items.forEach((item)=>{
         const li = document.createElement("li");
         li.innerHTML = item;
@@ -150,7 +192,7 @@ async function displayFilterlist(itemsType, items){
 }
 
 // display data of each recipes
-async function displayRecipes(recipes) {
+function displayRecipes(recipes) {
     const recipesSection = document.querySelector(".recipes");
 
     recipes.forEach((recipe) => {
