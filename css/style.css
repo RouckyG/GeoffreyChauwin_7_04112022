@@ -54,6 +54,7 @@ main {
 .tags {
     display: flex;
     margin: 15px 0;
+    flex-wrap: wrap;
 }
 
 .tag {
@@ -61,6 +62,8 @@ main {
     justify-content: space-between;
     align-items: center;
     padding: 8px 15px;
+    margin-right: 5px;
+    margin-bottom: 5px;
     border-radius: 5px;
     color: white;
     font-weight: bold;

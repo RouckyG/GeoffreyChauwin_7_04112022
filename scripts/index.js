@@ -37,6 +37,58 @@ async function getRecipes() {
     return data;
 }
 
+// update the activated Filters list by adding or removing the one the user clicked on
+async function addActivatedFilters(item, itemType){
+    const filter = {"item" : item, "itemType" : itemType}
+
+    activatedFilters.push(filter);
+
+    displayActivatedFilters()
+    console.log(activatedFilters);
+}
+
+// update the activated Filters list by adding or removing the one the user clicked on
+async function removeActivatedFilters(item, itemType){
+    const filter = {"item" : item, "itemType" : itemType}
+
+    activatedFilters.splice(activatedFilters.indexOf(filter),1);
+
+    displayActivatedFilters()
+    console.log(activatedFilters);
+}
+
+// display the activated Filters tags
+async function displayActivatedFilters(){
+    const activatedFiltersList = document.querySelector(".tags")
+    activatedFiltersList.innerHTML = "";
+
+    activatedFilters.forEach((filter) => {
+        const filterSpan = document.createElement("span");
+        filterSpan.classList.add("tag", "tag_"+filter.itemType);
+        activatedFiltersList.appendChild(filterSpan);
+
+        const p = document.createElement("p");
+        p.innerHTML = filter.item;
+        filterSpan.appendChild(p);
+
+        const a = document.createElement("a");
+        a.addEventListener("click", (e) => {
+            e.preventDefault();
+            removeActivatedFilters(filter.item, filter.itemType);
+        })
+        filterSpan.appendChild(a);
+
+        const i = document.createElement("i");
+        i.classList.add("fa-regular", "fa-circle-xmark")
+        a.appendChild(i);
+
+        // <span class="tag tag_search">
+        //             <p>Coco</p>
+        //             <a href="#"><i class="fa-regular fa-circle-xmark"></i></a>   
+        //         </span>
+    })
+}
+
 // ingredients, appliance, ustensils
 async function getFilters(data){
 
@@ -78,12 +130,13 @@ async function displayFilterLists(){
 }
 
 // display data of a filter
-async function displayFilterlist(filter, items){
-    const filterDropdown = document.querySelector(".filter_"+filter+" .filter_dropdown ul");
+async function displayFilterlist(itemsType, items){
+    const filterDropdown = document.querySelector(".filter_"+itemsType+" .filter_dropdown ul");
 
     items.forEach((item)=>{
         const li = document.createElement("li");
         li.innerHTML = item;
+        li.addEventListener("click", ()=>{addActivatedFilters(item, itemsType)});
         filterDropdown.appendChild(li);
     })
 }
