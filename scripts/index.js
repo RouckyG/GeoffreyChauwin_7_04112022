@@ -37,7 +37,7 @@ async function getRecipes() {
     return data;
 }
 
-// update the activated Filters list by adding or removing the one the user clicked on
+// update the activated Filters list by adding the one the user clicked on
 async function addActivatedFilters(item, itemType){
     const filter = {"item" : item, "itemType" : itemType}
 
@@ -47,11 +47,9 @@ async function addActivatedFilters(item, itemType){
     console.log(activatedFilters);
 }
 
-// update the activated Filters list by adding or removing the one the user clicked on
+// update the activated Filters list by removing the one the user clicked on
 async function removeActivatedFilters(item, itemType){
-    const filter = {"item" : item, "itemType" : itemType}
-
-    activatedFilters.splice(activatedFilters.indexOf(filter),1);
+    activatedFilters.splice(activatedFilters.findIndex((filter) => filter.item == item),1);
 
     displayActivatedFilters()
     console.log(activatedFilters);
