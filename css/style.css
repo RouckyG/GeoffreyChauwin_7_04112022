@@ -49,6 +49,12 @@ main {
     font-size: 26px;
     border: none;
     background-color: transparent;
+    flex-grow: 1;
+    margin-right: 15px;
+}
+
+.search_input i {
+    cursor: pointer;
 }
 
 .tags {

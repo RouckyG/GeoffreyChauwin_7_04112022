@@ -4,6 +4,21 @@ const Tools = [];
 
 const activatedFilters = [];
 
+const searchInput = document.querySelector(".search_input input");
+
+// add a filter when user enter a word in the search bar
+async function addSearchFilters(){
+    if(searchInput.value.length >= 2){
+        addActivatedFilters(searchInput.value, "search");
+        searchInput.value = "";
+    }
+}
+
+searchInput.addEventListener("keyup", (e)=> e.key == "Enter" ? addSearchFilters() : "")
+
+const searchIcon = document.querySelector(".search_input i");
+searchIcon.addEventListener("click", () => addSearchFilters());
+
 const filters = document.querySelectorAll(".filter");
 
 // hide all filters dropdown
@@ -44,15 +59,13 @@ async function addActivatedFilters(item, itemType){
     activatedFilters.push(filter);
 
     displayActivatedFilters()
-    console.log(activatedFilters);
 }
 
 // update the activated Filters list by removing the one the user clicked on
 async function removeActivatedFilters(item, itemType){
-    activatedFilters.splice(activatedFilters.findIndex((filter) => filter.item == item),1);
+    activatedFilters.splice(activatedFilters.findIndex((filter) => filter.item === item),1);
 
     displayActivatedFilters()
-    console.log(activatedFilters);
 }
 
 // display the activated Filters tags
@@ -112,9 +125,6 @@ async function getFilters(data){
             }
         })
     });
-    // console.log("Ingredients",Ingredients.sort())
-    // console.log("Appliances",Appliances)
-    // console.log("Tools",Tools)
 }
 
 // display data of each filter
