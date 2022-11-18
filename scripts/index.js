@@ -2,6 +2,34 @@ const Ingredients = [];
 const Appliances = [];
 const Tools = [];
 
+const activatedFilters = [];
+
+const filters = document.querySelectorAll(".filter");
+
+// hide all filters dropdown
+async function hideFiltersDropdown(){
+    filters.forEach((filter) => {
+        filter.querySelector("ul").style.display = "none";
+    })
+}
+
+// add the event listener on all arrows for show the dropdown list and hide the others
+filters.forEach((filter) => {
+    const arrow = filter.querySelector("button");
+    const dropdown = filter.querySelector(".filter_dropdown ul");
+
+    arrow.addEventListener("click", ()=>{
+        if(dropdown.style.display !== "flex"){
+            hideFiltersDropdown()
+            dropdown.style.display = "flex";
+        }
+        else{
+            dropdown.style.display = "none";
+        }
+    })
+})
+
+// get the recipe from the json file
 async function getRecipes() {
     const response = await fetch("data/recipes.json");
     const data = await response.json();
@@ -34,44 +62,33 @@ async function getFilters(data){
             }
         })
     });
-    console.log("Ingredients",Ingredients.sort())
-    console.log("Appliances",Appliances)
-    console.log("Tools",Tools)
+    // console.log("Ingredients",Ingredients.sort())
+    // console.log("Appliances",Appliances)
+    // console.log("Tools",Tools)
 }
 
-// display de data of each filter
+// display data of each filter
 async function displayFilterLists(){
-    const ingredientFilters = document.querySelector(".filter_ingredient").querySelector(".filter_dropdown");
-    const applianceFilters = document.querySelector(".filter_appliance").querySelector(".filter_dropdown");
-    const toolFilters = document.querySelector(".filter_tool").querySelector(".filter_dropdown");
 
     const filters = [["ingredient", Ingredients], ["appliance", Appliances], ["tool", Tools]];
-    filters["ingredient"] = Ingredients;
-    filters["appliance"] = Appliances;
-    filters["tool"] = Tools;
-    console.log(filters);
+
     filters.forEach((filter)=> {
-
-        const filterDropdown = document.querySelector(".filter_"+filter[0]).querySelector(".filter_dropdown");
-        const ul = document.createElement("ul");
-        filterDropdown.appendChild(ul);
-
-        filter[1].forEach((item)=>{
-            const li = document.createElement("li");
-            li.innerHTML = item;
-            ul.appendChild(li);
-        })
-console.log(filterDropdown)
+        displayFilterlist(filter[0], filter[1])
     })
-    // for(let i = 0 ; i <= 3 ; i++){
-
-    // }
-
-    // console.log(ingredientFilter)
-
 }
 
-// display de data of each recipes
+// display data of a filter
+async function displayFilterlist(filter, items){
+    const filterDropdown = document.querySelector(".filter_"+filter+" .filter_dropdown ul");
+
+    items.forEach((item)=>{
+        const li = document.createElement("li");
+        li.innerHTML = item;
+        filterDropdown.appendChild(li);
+    })
+}
+
+// display data of each recipes
 async function displayRecipes(recipes) {
     const recipesSection = document.querySelector(".recipes");
 
@@ -89,6 +106,7 @@ async function init() {
 
     displayFilterLists();
     displayRecipes(recipes);
+    document.querySelectorAll(".filter_input")
 }
 
 init();
