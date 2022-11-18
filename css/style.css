@@ -86,7 +86,7 @@ main {
     color: black;
 }
 
-.tag_ingregient {
+.tag_ingredient {
     background-color: #3282F7;
 }
 
@@ -181,6 +181,7 @@ main {
 .filter_dropdown li {
     flex-basis: 30%;
     margin-bottom: 10px;
+    margin-right: 10px;
     cursor: pointer;
 }
 .recipes {
