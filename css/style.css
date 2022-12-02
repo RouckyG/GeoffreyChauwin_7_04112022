@@ -75,6 +75,12 @@ main {
     font-weight: bold;
 }
 
+.tag p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 200px;
+}
+
 .tag a {
     font-size: 16px;
     margin-left: 8px;
@@ -157,7 +163,7 @@ main {
     justify-content: space-between;
     margin-bottom: 15px;
     max-height: 300px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 ::-webkit-scrollbar {
@@ -243,6 +249,9 @@ main {
     width: 45%;
     font-size: 12px;
     line-height: 14px;
+    overflow-y: auto;
+    max-height: 130px;
+    border-radius: 5px;
 }
 
 .recipe_ingredients span {

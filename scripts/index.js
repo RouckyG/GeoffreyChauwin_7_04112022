@@ -270,16 +270,18 @@ function displayFilterLists(){
     const filters = [["ingredient", Filters.ingredient], ["appliance", Filters["appliance"]], ["tool", Filters["tool"]]];
 
     filters.forEach((filter)=> {
-        displayFilterlist(filter[0], filter[1])
+        displayFilterlist(filter[0], filter[1], false)
     })
 }
 
 // display data of a filter
-function displayFilterlist(itemsType, items){
+function displayFilterlist(itemsType, items, isDisplayed = true){
     if(itemsType !== "search"){
         const filterDropdown = document.querySelector(`.filter_${itemsType} .filter_dropdown ul`);
         
-        filterDropdown.style.display = "flex";
+        if(isDisplayed){
+            filterDropdown.style.display = "flex";
+        }
         filterDropdown.innerHTML = "";
         
         items.forEach((item)=>{
