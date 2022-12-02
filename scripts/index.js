@@ -14,8 +14,42 @@ const activatedFilters = [];
 
 const searchInput = document.querySelector(".search_input input");
 
+// add a filter when user write in the search bar
+function addSearch(){
+    if(searchInput.value.length >= 3){
+        removeSearchFilter();
+        addSearchFilter(searchInput.value, "search", true)
+    }
+    else {
+        removeSearchFilter();
+        updateRecipeList();
+        displayActivatedFilters();
+    }
+    // displayFilterlist("search", Filters["search"]);
+}
+
+// update the activated Filters list by adding the one the user clicked on
+function addSearchFilter(item, itemType, isTyped = false){
+    const filter = {"item" : item, "itemType" : itemType, "isTyped" : isTyped}
+
+    activatedFilters.push(filter);
+
+    const filterInput = document.querySelector(`.filter_${itemType} input`);
+
+    updateRecipeList();
+
+    displayActivatedFilters();
+    // updateSearchFilter(filterInput,itemType);
+}
+
+function removeSearchFilter(){
+    if(activatedFilters.findIndex((filter) => filter.itemType === "search") >= 0){
+        activatedFilters.splice(activatedFilters.findIndex((filter) => filter.itemType === "search"),1)
+    }
+}
+
 // add a filter when user enter a word in the search bar
-function addSearchFilters(element, itemType, isTyped = true){
+function addFilter(element, itemType, isTyped = true){
     if(element.value.length >= 3){
         addActivatedFilters(element.value, itemType, isTyped);
         element.value = "";
@@ -23,10 +57,7 @@ function addSearchFilters(element, itemType, isTyped = true){
     }
 }
 
-searchInput.addEventListener("keyup", (e)=> { if(e.key == "Enter"){addSearchFilters(searchInput, "search", true)} });
-
-const searchIcon = document.querySelector(".search_input i");
-searchIcon.addEventListener("click", () => addSearchFilters(searchInput, "search", true));
+searchInput.addEventListener("keyup", ()=> {addSearch(searchInput, "search", true)});
 
 const filters = document.querySelectorAll(".filter");
 
@@ -78,7 +109,7 @@ filters.forEach((filter) => {
     filterInput.addEventListener("keyup", (e)=> {
 
         if(e.key == "Enter"){
-            addSearchFilters(filterInput, itemType, true);
+            addFilter(filterInput, itemType, true);
         }
         else{
             updateSearchFilter(filterInput, itemType);

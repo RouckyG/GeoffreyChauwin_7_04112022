@@ -53,10 +53,6 @@ main {
     margin-right: 15px;
 }
 
-.search_input i {
-    cursor: pointer;
-}
-
 .tags {
     display: flex;
     margin: 15px 0;
