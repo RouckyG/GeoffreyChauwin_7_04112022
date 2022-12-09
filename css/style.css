@@ -84,8 +84,7 @@ main {
 }
 
 .tag_search {
-    background-color: #E7E7E7;
-    color: black;
+    display: none;
 }
 
 .tag_ingredient {
