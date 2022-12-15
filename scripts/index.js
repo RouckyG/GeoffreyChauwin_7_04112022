@@ -153,7 +153,7 @@ function filterRecipes(filterList, recipeList){
                     }
                     break;
                 case "tool" :
-                    if (recipe.ustensils.includes(newFilterList[0].item) && !newRecipeList.includes(recipe)) {
+                    if (recipe.ustensils.join('').toLowerCase().includes(newFilterList[0].item) && !newRecipeList.includes(recipe)) {
                         newRecipeList.push(recipe);
                     }
                     else {
@@ -267,6 +267,10 @@ function updateFilters(recipes){
     Filters.tool.splice(0,Filters.tool.length);
 
     const alreadyActive = [];
+    
+    activatedFilters.forEach((activatedFilter) => {
+        alreadyActive.push(activatedFilter.item)
+    })
 
     recipes.forEach((recipe) =>{
 
