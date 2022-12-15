@@ -303,6 +303,10 @@ function updateFilters(recipes){
     Filters.tool.splice(0,Filters.tool.length);
 
     const alreadyActive = [];
+    
+    activatedFilters.forEach((activatedFilter) => {
+        alreadyActive.push(activatedFilter.item)
+    })
 
     recipes.forEach((recipe) =>{
 
