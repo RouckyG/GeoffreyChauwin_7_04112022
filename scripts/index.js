@@ -120,6 +120,26 @@ async function getRecipes() {
     return data;
 }
 
+function doesStringInclude(filter, item){
+    recipeName = item.toLowerCase().split('');
+    let isSame = 0;
+
+    for(let i = 0 ; i < recipeName.length ; i++){
+        if(recipeName[i] === filter[isSame]){
+            isSame++;
+
+            if(isSame === filter.length){
+                return true;
+            }
+        }
+        else{
+            isSame = 0;
+        }
+    }
+
+    return false;
+}
+
 // use one filter all Recipes and return the filtered list of recipes
 function isRecipesInFilter(filter, recipeList){
     const newRecipeList = [];
@@ -148,7 +168,7 @@ function isRecipesInFilter(filter, recipeList){
             }
         }
         else if(filter.itemType === "tool"){
-            if (recipe.ustensils.includes(filter.item) && !newRecipeList.includes(recipe)) {
+            if (recipe.ustensils.join(' ').toLowerCase().includes(filter.item) && !newRecipeList.includes(recipe)) {
                 newRecipeList.push(recipe);
             }
             else {
@@ -160,29 +180,36 @@ function isRecipesInFilter(filter, recipeList){
             }
         }
         else if(filter.itemType === "search"){
-            if (!newRecipeList.includes(recipe)){
-                if (recipe.name.toLowerCase().includes(filter.item)
-                || recipe.description.toLowerCase().includes(filter.item)
-                || recipe.appliance.toLowerCase().includes(filter.item)) {
-                    newRecipeList.push(recipe);
-                }
-                else {
-                    if(!recipe.ustensils.forEach((ustensil) => {
-                        if (ustensil.toLowerCase().includes(filter.item)){
-                            return newRecipeList.push(recipe);
-                        }
-                    })){
-                        recipe.ingredients.forEach((ingredient) => {
-                            if (ingredient.ingredient.toLowerCase().includes(filter.item)){
-                                newRecipeList.push(recipe);
-                            }
-                        })
+            for(let i3 = 0 ; i3 < recipeList.length; i3++){
+
+                if(newRecipeList[i3] !== recipe){
+                    if(doesStringInclude(filter.item, recipe.name)
+                    || doesStringInclude(filter.item, recipe.description)
+                    || doesStringInclude(filter.item, recipe.appliance)){
+                        newRecipeList.push(recipe);
+                        break;
                     }
+                    else{
+                        for(let i4 = 0 ; i4 < recipe.ustensils.length ; i4++){
+                            if(doesStringInclude(filter.item, recipe.ustensils[i4])){
+                                newRecipeList.push(recipe);
+                                break;
+                            }
+                        }
+                        for(let i4 = 0 ; i4 < recipe.ingredients.length ; i4++){
+                            if(doesStringInclude(filter.item, recipe.ingredients[i4].ingredient)){
+                                newRecipeList.push(recipe);
+                                break;
+                            }
+                        }
+                    }
+                }
+                else{
+                    break;
                 }
             }
         }
     }
-
     return newRecipeList;
 }
 
