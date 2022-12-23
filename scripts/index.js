@@ -1,3 +1,11 @@
+// get the recipe from the json file
+async function getRecipes() {
+    const response = await fetch("data/recipes.json");
+    const data = await response.json();
+
+    return data;
+}
+
 const allIngredients = [];
 const allAppliances = [];
 const allTools = [];
@@ -112,16 +120,14 @@ filters.forEach((filter) => {
     });
 })
 
-// get the recipe from the json file
-async function getRecipes() {
-    const response = await fetch("data/recipes.json");
-    const data = await response.json();
-
-    return data;
-}
-
+/**
+ * check if the filter string is inside the item string.
+ * @param {string} filter - the string that you want to search for
+ * @param {string} item - The string you're checking to see if it includes the filter.
+ * @returns a boolean value.
+ */
 function doesStringInclude(filter, item){
-    recipeName = item.toLowerCase().split('');
+    const recipeName = item.toLowerCase();
     let isSame = 0;
 
     for(let i = 0 ; i < recipeName.length ; i++){
