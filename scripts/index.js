@@ -50,6 +50,7 @@ function addSearchFilter(item, itemType, isTyped = false){
     // updateSearchFilter(filterInput,itemType);
 }
 
+// remove the filter of the searchbar
 function removeSearchFilter(){
     if(activatedFilters.findIndex((filter) => filter.itemType === "search") >= 0){
         activatedFilters.splice(activatedFilters.findIndex((filter) => filter.itemType === "search"),1)
