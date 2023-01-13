@@ -25,7 +25,6 @@ function addSearch(){
         updateRecipeList();
         displayActivatedFilters();
     }
-    // displayFilterlist("search", Filters["search"]);
 }
 
 // update the activated Filters list by adding the one the user clicked on
@@ -42,6 +41,7 @@ function addSearchFilter(item, itemType, isTyped = false){
     // updateSearchFilter(filterInput,itemType);
 }
 
+// remove filter of the searchbar
 function removeSearchFilter(){
     if(activatedFilters.findIndex((filter) => filter.itemType === "search") >= 0){
         activatedFilters.splice(activatedFilters.findIndex((filter) => filter.itemType === "search"),1)
@@ -125,6 +125,7 @@ async function getRecipes() {
     return data;
 }
 
+// filter the recipe's list by removing the recipes for each activated filters
 function filterRecipes(filterList, recipeList){
     
     const newRecipeList = [];
@@ -136,13 +137,13 @@ function filterRecipes(filterList, recipeList){
             switch(newFilterList[0].itemType){
                 case "ingredient" :
                     recipe.ingredients.forEach((ingredient) => {
-                    if (newFilterList[0].isTyped && ingredient.ingredient.toLowerCase().includes(newFilterList[0].item) && !newRecipeList.includes(recipe)){
-                        newRecipeList.push(recipe);
-                    }
-                    else if (ingredient.ingredient.toLowerCase() === newFilterList[0].item && !newRecipeList.includes(recipe)) {
-                        newRecipeList.push(recipe);
-                    }
-                })
+                        if (newFilterList[0].isTyped && ingredient.ingredient.toLowerCase().includes(newFilterList[0].item) && !newRecipeList.includes(recipe)){
+                            newRecipeList.push(recipe);
+                        }
+                        else if (ingredient.ingredient.toLowerCase() === newFilterList[0].item && !newRecipeList.includes(recipe)) {
+                            newRecipeList.push(recipe);
+                        }
+                    })
                     break;
                 case "appliance" :
                     if (newFilterList[0].isTyped && recipe.appliance.toLowerCase().includes(newFilterList[0].item) && !newRecipeList.includes(recipe)){
@@ -174,7 +175,7 @@ function filterRecipes(filterList, recipeList){
                         else {
                             if(!recipe.ustensils.forEach((ustensil) => {
                                 if (ustensil.toLowerCase().includes(newFilterList[0].item)){
-                                    return newRecipeList.push(recipe);
+                                    newRecipeList.push(recipe);
                                 }
                             })){
                                 recipe.ingredients.forEach((ingredient) => {
@@ -349,14 +350,14 @@ async function init() {
     Recipes.push(...AllRecipes);
 
     updateFilters(AllRecipes);
-    hideFiltersDropdown()
+    hideFiltersDropdown();
     
     allIngredients.push(...Filters.ingredient);
     allAppliances.push(...Filters.appliance);
     allTools.push(...Filters.tool);
 
     displayRecipes(AllRecipes);
-    document.querySelectorAll(".filter_input")
+    document.querySelectorAll(".filter_input");
 }
 
 init();
